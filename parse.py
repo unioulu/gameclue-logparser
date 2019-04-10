@@ -4,6 +4,9 @@ import os
 import sanitizer
 import counter
 
+DEFAULT_IN  = 'logs/'
+DEFAULT_OUT = 'output/'
+
 parser = argparse.ArgumentParser(
     description="Generates research relevant numbers out of the gameclue-spacegame logs.",
     epilog="Work in progress."
@@ -40,10 +43,11 @@ def parseArguments(args):
         description="Generates research relevant numbers out of the gameclue-spacegame logs.",
         epilog="Work in progress."
     )
-    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default="./logs")
+    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default=DEFAULT_IN )
     parser.add_argument("--list",                   help="List logfiles found on logfiles path.", action='store_true')
     parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
-    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key.")
+    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key."                        )
+    parser.add_argument("-o",                       help="Output folder path.",                   default=DEFAULT_OUT)
 
     args = parser.parse_args(args)
     return args
@@ -55,6 +59,8 @@ def main(args):
     if not useDefaultLogFilesPath:
         args.logfiles = args.logfiles[0]
 
+    useDefaultOutputPath = True if args.o in DEFAULT_OUT else False
+
     if folderExist(args.logfiles) and containsFiles(args.logfiles):
         if args.list:
             print(f"Available logfiles:")
@@ -64,7 +70,8 @@ def main(args):
         if args.sanitize:
             print(f"Sanitizing...")
             for logfile in listLogFilesByFolderPath(args):
-                sanitizer.normalizeTimeStamps(f'logs/{logfile}')
+                print(f'{args.logfiles}{logfile}')
+                sanitizer.normalizeTimeStamps(logfile, args)
                 print(f"Sanitized: {logfile}")
 
         if args.countkey:
@@ -74,6 +81,10 @@ def main(args):
                     result = counter.countKeys(f'logs/{logfile}', f'{key}')
                     print(f"{logfile} | {key}: {result[0]}")
                     print(f"{logfile} | {key}: {result[1]}")
+
+        if args.o:
+            if folderExist(args.o):
+                print(f"Output is producet to: \"{args.o}\"")
 
 if __name__== "__main__":
     import sys
