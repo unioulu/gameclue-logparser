@@ -6,6 +6,8 @@ Parser that processes [unioulu/gameclue] game logs.
 
 This program is supposed to be able to:
   - [x] Sanitize gamelogs by normalizing timestamps starting from 0 on first occurence of "GameStarted"
+  - [x] Use custom folder path for logfiles (folder path)
+  - [x] Use custom folder path for output (folder path)
   - [ ] Timeframe gamelogs with given time slot parameter
     - In practice means grouping of events, for example in 1 second intervals.
   - [ ] Produce a key-value pair report with per log with...
@@ -29,6 +31,13 @@ $ ./parse.py --help
 # Arguments
 
 ```
+usage: parse.py [-h] [--list] [--sanitize]
+                [--countkey [COUNTKEY [COUNTKEY ...]]] [-o O]
+                [--slice-output SLICE_OUTPUT]
+                [logfiles [logfiles ...]]
+
+Generates research relevant numbers out of the gameclue-spacegame logs.
+
 positional arguments:
   logfiles              Log files folder path.
 
@@ -38,6 +47,9 @@ optional arguments:
   --sanitize            Sanitizes the original game logs.
   --countkey [COUNTKEY [COUNTKEY ...]]
                         Counts the number of lines by key.
+  -o O                  Output folder path.
+  --slice-output SLICE_OUTPUT
+                        Slices the output
 ```
 
 [unioulu/gameclue]: (https://github.com/unioulu/gameclue)
