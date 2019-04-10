@@ -7,10 +7,20 @@ import counter
 DEFAULT_IN  = 'logs/'
 DEFAULT_OUT = 'output/'
 
-parser = argparse.ArgumentParser(
-    description="Generates research relevant numbers out of the gameclue-spacegame logs.",
-    epilog="Work in progress."
-)
+def createParser():
+    parser = argparse.ArgumentParser(
+        description="Generates research relevant numbers out of the gameclue-spacegame logs.",
+        epilog="Work in progress."
+    )
+    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default=DEFAULT_IN )
+    parser.add_argument("--list",                   help="List logfiles found on logfiles path.", action='store_true')
+    parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
+    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key."                        )
+    parser.add_argument("-o",                       help="Output folder path.",                   default=DEFAULT_OUT)
+    parser.add_argument("--slice-output",                  help="Slices the output")
+    return parser
+
+parser = createParser()
 
 def listLogFilesByFolderPath(args):
     path = args.logfiles
@@ -38,22 +48,9 @@ def containsFiles(path):
         parser.error(f" Folder: \"{path}\" is empty! Try another folder path?")
         return False
 
-def parseArguments(args):
-    parser = argparse.ArgumentParser(
-        description="Generates research relevant numbers out of the gameclue-spacegame logs.",
-        epilog="Work in progress."
-    )
-    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default=DEFAULT_IN )
-    parser.add_argument("--list",                   help="List logfiles found on logfiles path.", action='store_true')
-    parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
-    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key."                        )
-    parser.add_argument("-o",                       help="Output folder path.",                   default=DEFAULT_OUT)
-
-    args = parser.parse_args(args)
-    return args
-
 def main(args):
-    args = parseArguments(args)
+    parser = createParser()
+    args = parser.parse_args(args)
 
     useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
     if not useDefaultLogFilesPath:
