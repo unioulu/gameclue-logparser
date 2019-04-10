@@ -17,7 +17,7 @@ def listLogFiles(path):
             available_logs.append(name)
     return available_logs
 
-def parseArguments():
+def parseArguments(args):
     parser = argparse.ArgumentParser(
         description="Generates research relevant numbers out of the gameclue-spacegame logs.",
         epilog="Work in progress."
@@ -27,7 +27,7 @@ def parseArguments():
     parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
     parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key.")
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     return args
 
 def isOutputFilePresent():
@@ -36,8 +36,8 @@ def isOutputFilePresent():
     else:
         return False
 
-def main():
-    args = parseArguments()
+def main(args):
+    args = parseArguments(args)
     useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
 
     if useDefaultLogFilesPath:
@@ -65,4 +65,5 @@ def main():
                     print(counter.countKeys(f'logs/{logfile}', f'{key}'))
 
 if __name__== "__main__":
-    main()
+    import sys
+    main(sys.argv[1:])
