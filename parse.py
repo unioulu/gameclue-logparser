@@ -4,7 +4,6 @@ import os
 import sanitizer
 import counter
 
-LOGS_FOLDER_PATH = './logs'
 parser = argparse.ArgumentParser(
     description="Generates research relevant numbers out of the gameclue-spacegame logs.",
     epilog="Work in progress."
@@ -58,7 +57,9 @@ def main(args):
 
     if folderExist(args.logfiles) and containsFiles(args.logfiles):
         if args.list:
-            print(f"Available logfiles: {listLogFilesByFolderPath(args)}")
+            print(f"Available logfiles:")
+            for logfile in listLogFilesByFolderPath(args):
+                print(logfile)
 
         if args.sanitize:
             print(f"Sanitizing...")
