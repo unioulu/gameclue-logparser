@@ -5,10 +5,13 @@ import sanitizer
 import counter
 
 LOGS_FOLDER_PATH = './logs'
+parser = argparse.ArgumentParser(
+    description="Generates research relevant numbers out of the gameclue-spacegame logs.",
+    epilog="Work in progress."
+)
 
-# Lists available logs found in ./logs
-def listLogFiles(path):
-    # path = "./logs"
+def listLogFilesByFolderPath(args):
+    path = args.logfiles
     available_logs = []
     files = os.listdir(path)
     for name in files:
@@ -16,6 +19,22 @@ def listLogFiles(path):
         if os.path.isfile(full_path):
             available_logs.append(name)
     return available_logs
+
+def folderExist(path):
+    try:
+        os.listdir(path)
+        return True
+    except FileNotFoundError:
+        parser.error(f"Folder: \"{path}\" does't exist! Path typed incorrectly?")
+        return False
+
+def containsFiles(path):
+    files = os.listdir(path)
+    if not files == []:
+        return True
+    else:
+        parser.error(f" Folder: \"{path}\" is empty! Try another folder path?")
+        return False
 
 def parseArguments(args):
     parser = argparse.ArgumentParser(
@@ -30,39 +49,30 @@ def parseArguments(args):
     args = parser.parse_args(args)
     return args
 
-def isOutputFilePresent():
-    if os.path.isfile(os.listdir('./output/processed.csv')):
-        return True
-    else:
-        return False
-
 def main(args):
     args = parseArguments(args)
-    useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
 
-    if useDefaultLogFilesPath:
-        print("Using default path: ./logs")
+    useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
+    if not useDefaultLogFilesPath:
+        args.logfiles = args.logfiles[0]
+
+    if folderExist(args.logfiles) and containsFiles(args.logfiles):
         if args.list:
-            print(f"Available logfiles: {listLogFiles(args.logfiles)}")
+            print(f"Available logfiles: {listLogFilesByFolderPath(args)}")
 
         if args.sanitize:
             print(f"Sanitizing...")
-            for logfile in listLogFiles(args.logfiles):
+            for logfile in listLogFilesByFolderPath(args):
                 sanitizer.normalizeTimeStamps(f'logs/{logfile}')
                 print(f"Sanitized: {logfile}")
 
         if args.countkey:
-            print(args.countkey)
-            for logfile in listLogFiles(args.logfiles):
+            for logfile in listLogFilesByFolderPath(args):
+                print(f'Counting keys: {args.countkey} for logfile: {logfile}')
                 for key in args.countkey:
-                    print(counter.countLogEntryValues(f'logs/{logfile}', f'{key}'))
-
-    else:
-        if args.countkey:
-            print(f'Counting keys: {args.countkey}')
-            for logfile in listLogFiles(args.logfiles):
-                for key in args.countkey:
-                    print(counter.countKeys(f'logs/{logfile}', f'{key}'))
+                    result = counter.countKeys(f'logs/{logfile}', f'{key}')
+                    print(f"{logfile} | {key}: {result[0]}")
+                    print(f"{logfile} | {key}: {result[1]}")
 
 if __name__== "__main__":
     import sys
