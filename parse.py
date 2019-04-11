@@ -3,6 +3,7 @@ import argparse
 import os
 import sanitizer
 import counter
+import mutationparser as mp
 
 DEFAULT_IN  = 'logs/'
 DEFAULT_OUT = 'output/'
@@ -79,9 +80,14 @@ def main(args):
                     print(f"{logfile} | {key}: {result[0]}")
                     print(f"{logfile} | {key}: {result[1]}")
 
+        print("Going to produce juicy outputs now per mutation.")
+        for logfile in listLogFilesByFolderPath(args):
+            logfilepath = f'{args.logfiles}{logfile}'
+            mp.parse(logfilepath, args)
+
         if args.o:
             if folderExist(args.o):
-                print(f"Output is producet to: \"{args.o}\"")
+                print(f"Output produced to: \"{args.o}\"")
 
 if __name__== "__main__":
     import sys
