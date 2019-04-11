@@ -3,12 +3,27 @@ import argparse
 import os
 import sanitizer
 import counter
+import mutationparser as mp
 
-LOGS_FOLDER_PATH = './logs'
+DEFAULT_IN  = 'logs/'
+DEFAULT_OUT = 'output/'
 
-# Lists available logs found in ./logs
-def listLogFiles(path):
-    # path = "./logs"
+def createParser():
+    parser = argparse.ArgumentParser(
+        description="Generates research relevant numbers out of the gameclue-spacegame logs.",
+        epilog="Work in progress."
+    )
+    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default=DEFAULT_IN )
+    parser.add_argument("--list",                   help="List logfiles found on logfiles path.", action='store_true')
+    parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
+    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key."                        )
+    parser.add_argument("-o",                       help="Output folder path.",                   default=DEFAULT_OUT)
+    return parser
+
+parser = createParser()
+
+def listLogFilesByFolderPath(args):
+    path = args.logfiles
     available_logs = []
     files = os.listdir(path)
     for name in files:
@@ -17,52 +32,62 @@ def listLogFiles(path):
             available_logs.append(name)
     return available_logs
 
-def parseArguments():
-    parser = argparse.ArgumentParser(
-        description="Generates research relevant numbers out of the gameclue-spacegame logs.",
-        epilog="Work in progress."
-    )
-    parser.add_argument("logfiles",     nargs='*',  help="Log files folder path.",                default="./logs")
-    parser.add_argument("--list",                   help="List logfiles found on logfiles path.", action='store_true')
-    parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
-    parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key.")
-
-    args = parser.parse_args()
-    return args
-
-def isOutputFilePresent():
-    if os.path.isfile(os.listdir('./output/processed.csv')):
+def folderExist(path):
+    try:
+        os.listdir(path)
         return True
-    else:
+    except FileNotFoundError:
+        parser.error(f"Folder: \"{path}\" does't exist! Path typed incorrectly?")
         return False
 
-def main():
-    args = parseArguments()
-    useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
+def containsFiles(path):
+    files = os.listdir(path)
+    if not files == []:
+        return True
+    else:
+        parser.error(f" Folder: \"{path}\" is empty! Try another folder path?")
+        return False
 
-    if useDefaultLogFilesPath:
-        print("Using default path: ./logs")
+def main(args):
+    parser = createParser()
+    args = parser.parse_args(args)
+
+    useDefaultLogFilesPath = True if not isinstance(args.logfiles, list) else False
+    if not useDefaultLogFilesPath:
+        args.logfiles = args.logfiles[0]
+
+    useDefaultOutputPath = True if args.o in DEFAULT_OUT else False
+
+    if folderExist(args.logfiles) and containsFiles(args.logfiles):
         if args.list:
-            print(f"Available logfiles: {listLogFiles(args.logfiles)}")
+            print(f"Available logfiles:")
+            for logfile in listLogFilesByFolderPath(args):
+                print(logfile)
 
         if args.sanitize:
             print(f"Sanitizing...")
-            for logfile in listLogFiles(args.logfiles):
-                sanitizer.normalizeTimeStamps(f'logs/{logfile}')
+            for logfile in listLogFilesByFolderPath(args):
+                print(f'{args.logfiles}{logfile}')
+                sanitizer.normalizeTimeStamps(logfile, args)
                 print(f"Sanitized: {logfile}")
 
         if args.countkey:
-            print(args.countkey)
-            for logfile in listLogFiles(args.logfiles):
+            for logfile in listLogFilesByFolderPath(args):
+                print(f'Counting keys: {args.countkey} for logfile: {logfile}')
                 for key in args.countkey:
-                    print(counter.countLogEntryValues(f'logs/{logfile}', f'{key}'))
+                    result = counter.countKeys(f'logs/{logfile}', f'{key}')
+                    print(f"{logfile} | {key}: {result[0]}")
+                    print(f"{logfile} | {key}: {result[1]}")
 
-    else:
-        if args.countkey:
-            print(f'Counting keys: {args.countkey}')
-            for logfile in listLogFiles(args.logfiles):
-                for key in args.countkey:
-                    print(counter.countKeys(f'logs/{logfile}', f'{key}'))
+        print("Going to produce juicy outputs now per mutation.")
+        for logfile in listLogFilesByFolderPath(args):
+            logfilepath = f'{args.logfiles}{logfile}'
+            mp.parse(logfilepath, args)
+
+        if args.o:
+            if folderExist(args.o):
+                print(f"Output produced to: \"{args.o}\"")
 
 if __name__== "__main__":
-    main()
+    import sys
+    main(sys.argv[1:])

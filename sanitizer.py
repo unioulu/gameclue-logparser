@@ -9,12 +9,10 @@ def getFirstOccurenceLineNumber(logfile, logEntry):
     return -1
 
 # Normalize all timestamps to start from 0 on first occurence of gamestart.
-def normalizeTimeStamps(logfile):
-
+def normalizeTimeStamps(logfile, args):
     # Sanitize based on first occurence of "GameStarted"
-    t0_line = getFirstOccurenceLineNumber(logfile, "GameStarted")
-
-    with open(logfile) as f:
+    t0_line = getFirstOccurenceLineNumber(f'{args.logfiles}{logfile}', "GameStarted")
+    with open(f'{args.logfiles}{logfile}') as f:
         reader = csv.reader(f, delimiter=';', quotechar='"')
         data = []
         for row in reader:
@@ -23,7 +21,8 @@ def normalizeTimeStamps(logfile):
     t0_value = data[t0_line][0]
     sanitized = []
 
-    with open(f'./output/{logfile.strip("logs/")}', 'w+', newline='') as csvfile:
+    # Write sanitized logs to given output path (args.o)
+    with open(f'{args.o}{logfile}', 'w+', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
 
         for timestamp, event in data:
