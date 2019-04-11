@@ -8,6 +8,7 @@ This program is supposed to be able to:
   - [x] Sanitize gamelogs by normalizing timestamps starting from 0 on first occurence of "GameStarted"
   - [x] Use custom folder path for logfiles (folder path)
   - [x] Use custom folder path for output (folder path)
+  - [x] Split logs in mutation parts
   - [ ] Timeframe gamelogs with given time slot parameter
     - In practice means grouping of events, for example in 1 second intervals.
   - [ ] Produce a key-value pair report with per log with...
@@ -48,8 +49,6 @@ optional arguments:
   --countkey [COUNTKEY [COUNTKEY ...]]
                         Counts the number of lines by key.
   -o O                  Output folder path.
-  --slice-output SLICE_OUTPUT
-                        Slices the output
 ```
 
 [unioulu/gameclue]: (https://github.com/unioulu/gameclue)
