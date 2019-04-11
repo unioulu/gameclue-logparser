@@ -18,7 +18,6 @@ def createParser():
     parser.add_argument("--sanitize",               help="Sanitizes the original game logs.",     action='store_true')
     parser.add_argument("--countkey",   nargs='*',  help="Counts the number of lines by key."                        )
     parser.add_argument("-o",                       help="Output folder path.",                   default=DEFAULT_OUT)
-    parser.add_argument("--slice-output",                  help="Slices the output")
     return parser
 
 parser = createParser()
