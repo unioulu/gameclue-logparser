@@ -4,6 +4,7 @@ import os
 import sanitizer
 import counter
 import mutationparser as mp
+import reporter
 
 DEFAULT_IN = 'logs/'
 DEFAULT_OUT = 'output/'
@@ -31,6 +32,9 @@ def createParser():
     parser.add_argument("--split-mutations",
                         help="Output individual logfiles for each mutation.",
                         action='store_true')
+    parser.add_argument("--report",
+                        help="Generate a csv report containing meaningful stats.",
+                        action="store_true")
     parser.add_argument("-o",
                         help="Output folder path.",
                         default=DEFAULT_OUT)
@@ -106,6 +110,12 @@ def main(args):
             for logfile in listLogFilesByFolderPath(args):
                 logfilepath = f'{args.logfiles}{logfile}'
                 mp.parse(logfilepath, args)
+
+        if args.report:
+            for logfile in listLogFilesByFolderPath(args):
+                logfilepath = f'{args.logfiles}{logfile}'
+                print(logfilepath)
+                reporter.generate(logfilepath)
 
         if args.o:
             if folderExist(args.o):
