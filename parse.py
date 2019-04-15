@@ -5,9 +5,15 @@ import sanitizer
 import counter
 import mutationparser as mp
 import reporter
+from LogFile import LogFile
+from GameStartedTimeStampNormalizer import GameStartedTimeStampNormalizer
+from CSVWriter import CSVWriter
 
 DEFAULT_IN = 'logs/'
 DEFAULT_OUT = 'output/'
+LogFiles = []
+gameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
+CSVWriter = CSVWriter()
 
 
 def createParser():
@@ -33,7 +39,8 @@ def createParser():
                         help="Output individual logfiles for each mutation.",
                         action='store_true')
     parser.add_argument("--report",
-                        help="Generate a csv report containing meaningful stats.",
+                        help="""
+                        Generate a csv report containing meaningful stats.""",
                         action="store_true")
     parser.add_argument("-o",
                         help="Output folder path.",
@@ -85,18 +92,28 @@ def main(args):
     useDefaultOutputPath = True if args.o in DEFAULT_OUT else False
 
     if folderExist(args.logfiles) and containsFiles(args.logfiles):
+
+        for logfile in listLogFilesByFolderPath(args):
+            logfile_path = f'{args.logfiles}{logfile}'
+            LogFiles.append(LogFile(logfile_path))
+
         if args.list:
             print(f"Available logfiles:")
-            for logfile in listLogFilesByFolderPath(args):
-                print(logfile)
+            for logfile in LogFiles:
+                print(logfile.path)
 
         if args.sanitize:
             print(f"Sanitizing...")
-            for logfile in listLogFilesByFolderPath(args):
-                print(f'{args.logfiles}{logfile}')
-                # Sanitize based on first occurence of "GameStarted"
-                sanitizer.normalizeTimeStampsByKey(logfile, "GameStarted", args)
-                print(f"Sanitized: {logfile}")
+            for i, logfile in enumerate(LogFiles):
+                LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
+                # print(LogFiles[i].data)
+                print("\n\n\n\n\n")
+                # LogFiles[i] = GameStartedTimeStampNormalizer.sanitize(logfile)
+            # for logfile in listLogFilesByFolderPath(args):
+            #     print(f'{args.logfiles}{logfile}')
+            #     # Sanitize based on first occurence of "GameStarted"
+            #     sanitizer.normalizeTimeStampsByKey(logfile, "GameStarted", args)
+            #     print(f"Sanitized: {logfile}")
 
         if args.countkey:
             for logfile in listLogFilesByFolderPath(args):
@@ -119,6 +136,8 @@ def main(args):
 
         if args.o:
             if folderExist(args.o):
+                for logFile in LogFiles:
+                    CSVWriter.write(logFile, args.o)
                 print(f"Output produced to: \"{args.o}\"")
 
 

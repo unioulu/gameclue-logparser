@@ -2,6 +2,18 @@
 import csv
 
 
+def sanitize(logfile):
+    gameStartedRow = getFirstOccurenceLineNumber(logfile.path, "GameStarted")
+    print(gameStartedRow, logfile.path)
+    if gameStartedRow != -1:
+        timestamp_delta, other = logfile.data[gameStartedRow]
+        for timestamp, events in logfile.data:
+            timestamp = '%g' % (float(timestamp.replace(
+                ',', '.')) - float(timestamp_delta.replace(',', '.')))
+    else:
+        print(f"Could not find the first occurence of {logEntry} in {logfile}")
+
+
 def getFirstOccurenceLineNumber(logfile, logEntry):
     with open(logfile, 'r') as f:
         for (i, line) in enumerate(f):
