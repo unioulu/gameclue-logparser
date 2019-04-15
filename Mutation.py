@@ -1,6 +1,11 @@
 class Mutation(object):
-    """Mutation represents a part of a LogFile. """
+    """
+    Mutation represents a mutation part of a LogFile.
 
-    def __init__(self):
+    Ex: mutation = Mutation(data, 'base')
+    """
+
+    def __init__(self, name, data):
         super(Mutation, self).__init__()
+        self.name = name
         self.data = data

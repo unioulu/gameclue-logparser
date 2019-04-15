@@ -3,8 +3,8 @@ import argparse
 import os
 import sanitizer
 import counter
-import mutationparser as mp
 import reporter
+from MutationParser import MutationParser as mp
 from LogFile import LogFile
 from GameStartedTimeStampNormalizer import GameStartedTimeStampNormalizer
 from CSVWriter import CSVWriter
@@ -13,6 +13,7 @@ DEFAULT_IN = 'logs/'
 DEFAULT_OUT = 'output/'
 LogFiles = []
 gameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
+# mutationTimeStampNormalizer = mutationTimeStampNormalizer()
 CSVWriter = CSVWriter()
 
 
@@ -106,39 +107,14 @@ def main(args):
             print(f"Sanitizing...")
             for i, logfile in enumerate(LogFiles):
                 LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
-                # print(LogFiles[i].data)
-                print("\n\n\n\n\n")
-                # LogFiles[i] = GameStartedTimeStampNormalizer.sanitize(logfile)
-            # for logfile in listLogFilesByFolderPath(args):
-            #     print(f'{args.logfiles}{logfile}')
-            #     # Sanitize based on first occurence of "GameStarted"
-            #     sanitizer.normalizeTimeStampsByKey(logfile, "GameStarted", args)
-            #     print(f"Sanitized: {logfile}")
-
-        if args.countkey:
-            for logfile in listLogFilesByFolderPath(args):
-                print(f'Counting keys: {args.countkey} for logfile: {logfile}')
-                for key in args.countkey:
-                    result = counter.countKeys(f'{args.logfiles}/{logfile}', f'{key}')
-                    print(f"{logfile} | {key}: {result[0]}")
-                    print(f"{logfile} | {key}: {result[1]}")
-
-        if args.split_mutations:
-            for logfile in listLogFilesByFolderPath(args):
-                logfilepath = f'{args.logfiles}{logfile}'
-                mp.parse(logfilepath, args)
-
-        if args.report:
-            for logfile in listLogFilesByFolderPath(args):
-                logfilepath = f'{args.logfiles}{logfile}'
-                print(logfilepath)
-                reporter.generate(logfilepath)
+                # LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
 
         if args.o:
             if folderExist(args.o):
+                print(f"Writing files... ({args.o})")
                 for logFile in LogFiles:
                     CSVWriter.write(logFile, args.o)
-                print(f"Output produced to: \"{args.o}\"")
+                    CSVWriter.write_mutation(logFile, args.o)
 
 
 if __name__ == "__main__":

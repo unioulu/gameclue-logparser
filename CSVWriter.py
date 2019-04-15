@@ -11,10 +11,18 @@ class CSVWriter(object):
         super(CSVWriter, self).__init__()
 
     def write(self, LogFile, output_folder_path):
-        print(output_folder_path)
-        print(LogFile.path)
-        outputti = f"{output_folder_path}{random.randint(1,1000)}"
-        with open(outputti, 'w+', newline='') as out:
+        output = f"{output_folder_path}{LogFile.file_base_name}{LogFile.file_extension}"
+        with open(output, 'w+', newline='') as out:
             writer = csv.writer(out, delimiter=',',
                                 quotechar='"', quoting=csv.QUOTE_ALL)
             writer.writerows(LogFile.data)
+            print(f"Write: {output}")
+
+    def write_mutation(self, LogFile, output_folder_path):
+        for mutation in LogFile.mutations:
+            output = f"{output_folder_path}{LogFile.file_base_name}{mutation.name}"
+            with open(output, 'w+', newline='') as out:
+                writer = csv.writer(out, delimiter=',',
+                                    quotechar='"', quoting=csv.QUOTE_ALL)
+                writer.writerows(mutation.data)
+                print(f"Write: {output}")

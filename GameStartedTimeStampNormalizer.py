@@ -16,11 +16,11 @@ class GameStartedTimeStampNormalizer(LogFileSanitizer):
         super(GameStartedTimeStampNormalizer, self).__init__()
 
     def sanitize(self, LogFile):
+        """ Returns sanitized, timestamp normalized LogFile """
         gameStartedRow = self.getFirstOccurenceLineNumber(
             LogFile, "GameStarted")
         if gameStartedRow != -1:
             timestamp_delta, other = LogFile.data[gameStartedRow]
-            print(LogFile.data[gameStartedRow])
 
             for i, (timestamp, events) in enumerate(LogFile.data):
                 # print(LogFile.data[i][0])
