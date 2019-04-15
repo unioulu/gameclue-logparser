@@ -48,6 +48,3 @@ class LogFile(object):
     def _find_mutations(self):
         """ Finds mutations from a file and return a list of Mutations """
         return MutationParser.parse(self)
-
-    def getRowByTimestamp():
-        """ Returns a full row of data by timestamp """
