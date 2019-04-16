@@ -7,13 +7,14 @@ import reporter
 from MutationParser import MutationParser as mp
 from LogFile import LogFile
 from GameStartedTimeStampNormalizer import GameStartedTimeStampNormalizer
+from MutationTimeStampNormalizer import MutationTimeStampNormalizer
 from CSVWriter import CSVWriter
 
 DEFAULT_IN = 'logs/'
 DEFAULT_OUT = 'output/'
 LogFiles = []
 gameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
-# mutationTimeStampNormalizer = mutationTimeStampNormalizer()
+mutationTimeStampNormalizer = MutationTimeStampNormalizer()
 CSVWriter = CSVWriter()
 
 
@@ -107,7 +108,7 @@ def main(args):
             print(f"Sanitizing...")
             for i, logfile in enumerate(LogFiles):
                 LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
-                # LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
+                LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
 
         if args.o:
             if folderExist(args.o):
