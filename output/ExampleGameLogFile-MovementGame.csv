@@ -1,6 +1,0 @@
-"211,873","ChangedScene|MovementGameScene"
-"211,886","HasCues|True"
-"212,313","GameStarted"
-"213,495","EnemySpawned|Asteroid|4,258463|6"
-"215.38","PlayerReceivedDamage|HoverEnemyLeft(Clone)|1"
-"215.38","PlayerDied|HoverEnemyLeft(Clone)|1"
