@@ -29,8 +29,6 @@ class GameStartedTimeStampNormalizer(LogFileSanitizer):
         else:
             print(f"Could not find the first occurence of {logEntry} in {LogFile.path}")
 
-        """ Returns sanitized LogFile. """
-        # TODO: Implement this
         return LogFile
 
     def getFirstOccurenceLineNumber(self, LogFile, logEntry):
