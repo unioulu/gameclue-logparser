@@ -1,5 +1,7 @@
 import csv
 import random
+from Counter import Counter
+from MutationParser import MutationParser
 
 
 class CSVWriter(object):
@@ -24,5 +26,73 @@ class CSVWriter(object):
             with open(output, 'w+', newline='') as out:
                 writer = csv.writer(out, delimiter=',',
                                     quotechar='"', quoting=csv.QUOTE_ALL)
+                writer.writerow(['timestamp','event'])
                 writer.writerows(mutation.data)
                 print(f"Write: {output}")
+
+    def write_mutation_report(self, LogFiles, output_folder_path):
+
+        output = f"{output_folder_path}MutationReport.csv"
+        header = ['user', 'mutation', 'hasCues', 'mutationPlayedInOrder',
+                  'playerDeaths', 'normalShotsFired', 'chargeShotsFired',
+                  'timeFirstPositiveCollected', 'timeLastPositiveCollected', 'totalPositivesCollected',
+                  'timeFirstNegativeCollected', 'timeLastNegativeCollected', 'totalNegativesCollected',
+                  'timeFirstNormalShotFired', 'timeFirstInputKeyPressedLEFT', 'timeFirstInputKeyPressedRIGHT',
+                  'timeFirstInputKeyPressedUP', 'timeFirstInputKeyPressedDOWN', 'timeFirstInputKeyPressedSPACE']
+
+        with open(output, 'w+', newline='') as out:
+            writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
+                                    quotechar='"', quoting=csv.QUOTE_ALL)
+            writer.writeheader()
+            for logfile in LogFiles:
+                for mutation in logfile.mutations:
+
+                    playerDeaths = Counter.countKeys(mutation, "GameEnded|PlayerDied")
+                    normalShotsFired = Counter.countKeys(mutation, "PlayerFiredNormalShot")
+
+                    mutationPlayedInOrder = None
+
+                    chargeShotsFired = MutationParser.findFirstTimestamp(mutation, "PlayerFiredChargedShot")
+
+                    timeFirstPositiveCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
+                    timeFirstNegativeCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin_Negative(Clone)")
+
+                    timeFirstNormalShotFired = MutationParser.findFirstTimestamp(mutation, "PlayerFiredNormalShot")
+
+                    timeFirstInputKeyPressedLEFT = MutationParser.findFirstTimestamp(mutation, "KeyDown|LeftArrow")
+                    timeFirstInputKeyPressedRIGHT = MutationParser.findFirstTimestamp(mutation, "KeyDown|RightArrow")
+                    timeFirstInputKeyPressedUP = MutationParser.findFirstTimestamp(mutation, "KeyDown|UpArrow")
+                    timeFirstInputKeyPressedDOWN = MutationParser.findFirstTimestamp(mutation, "KeyDown|DownArrow")
+                    timeFirstInputKeyPressedSPACE = MutationParser.findFirstTimestamp(mutation, "KeyDown|Space")
+
+                    inputKeySPACEWasPressedForOneSecond = None
+                    timeLastPositiveCollected = None
+                    totalPositivesCollected = None
+                    timeLastNegativeCollected = None
+                    totalNegativesCollected = None
+
+
+                    writer.writerow({'user': logfile.file_base_name,
+                                     'mutation': mutation.name,
+                                     'hasCues': logfile.has_cues,
+                                     'mutationPlayedInOrder': mutationPlayedInOrder,
+                                     'playerDeaths': playerDeaths,
+                                     'normalShotsFired': normalShotsFired,
+                                     'chargeShotsFired': chargeShotsFired,
+                                     'timeFirstPositiveCollected': timeFirstPositiveCollected,
+                                     'timeLastPositiveCollected': timeLastPositiveCollected,
+                                     'totalPositivesCollected': totalPositivesCollected,
+                                     'timeFirstNegativeCollected': timeFirstNegativeCollected,
+                                     'timeLastNegativeCollected': timeLastNegativeCollected,
+                                     'totalNegativesCollected': totalNegativesCollected,
+                                     'timeFirstNormalShotFired': timeFirstNormalShotFired,
+                                     'timeFirstInputKeyPressedLEFT': timeFirstInputKeyPressedLEFT,
+                                     'timeFirstInputKeyPressedRIGHT': timeFirstInputKeyPressedRIGHT,
+                                     'timeFirstInputKeyPressedUP': timeFirstInputKeyPressedUP,
+                                     'timeFirstInputKeyPressedDOWN': timeFirstInputKeyPressedDOWN,
+                                     'timeFirstInputKeyPressedSPACE': timeFirstInputKeyPressedSPACE,
+                                    })
+
+        print(f'Write: {output}')
+
+# writer = csv.DictWriter(open("ChartData.csv", 'a' ), headers)

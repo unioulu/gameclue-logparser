@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+class Counter(object):
+    """ Counter """
 
+    def __init__(self):
+        super(Counter, self).__init__()
 
-def countKeys(logfile, key):
-    count = 0
-    rows = []
-    with open(logfile, 'r') as f:
-        for (i, line) in enumerate(f):
-            if key in line:
+    def countKeys(Log, key):
+        count = 0
+        for row in Log.data:
+            if key in row:
                 count = count + 1
-                rows.append(line)
-        return count, rows
+        return count
