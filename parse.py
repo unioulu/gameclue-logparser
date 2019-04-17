@@ -34,16 +34,6 @@ def createParser():
     parser.add_argument("--sanitize",
                         help="Sanitizes the original game logs.",
                         action='store_true')
-    parser.add_argument("--countkey",
-                        nargs='*',
-                        help="Counts the number of lines by key.")
-    parser.add_argument("--split-mutations",
-                        help="Output individual logfiles for each mutation.",
-                        action='store_true')
-    parser.add_argument("--report",
-                        help="""
-                        Generate a csv report containing meaningful stats.""",
-                        action="store_true")
     parser.add_argument("-o",
                         help="Output folder path.",
                         default=DEFAULT_OUT)
