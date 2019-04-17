@@ -3,7 +3,6 @@ import argparse
 import os
 import sanitizer
 import Counter
-import reporter
 from MutationParser import MutationParser as mp
 from LogFile import LogFile
 from GameStartedTimeStampNormalizer import GameStartedTimeStampNormalizer
