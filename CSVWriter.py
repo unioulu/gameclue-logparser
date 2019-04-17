@@ -36,7 +36,9 @@ class CSVWriter(object):
         header = ['user', 'mutation', 'hasCues', 'mutationPlayedInOrder',
                   'playerDeaths', 'normalShotsFired', 'chargeShotsFired',
                   'timeFirstPositiveCollected', 'timeLastPositiveCollected', 'totalPositivesCollected',
-                  'timeFirstNegativeCollected', 'timeLastNegativeCollected', 'totalNegativesCollected']
+                  'timeFirstNegativeCollected', 'timeLastNegativeCollected', 'totalNegativesCollected',
+                  'timeFirstNormalShotFired', 'timeFirstInputKeyPressedLEFT', 'timeFirstInputKeyPressedRIGHT',
+                  'timeFirstInputKeyPressedUP', 'timeFirstInputKeyPressedDOWN', 'timeFirstInputKeyPressedSPACE']
 
         with open(output, 'w+', newline='') as out:
             writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
@@ -45,26 +47,50 @@ class CSVWriter(object):
             for logfile in LogFiles:
                 for mutation in logfile.mutations:
 
-                    normalShotsFired = Counter.countKeys(mutation, "PlayerFiredNormalShot")
                     playerDeaths = Counter.countKeys(mutation, "GameEnded|PlayerDied")
+                    normalShotsFired = Counter.countKeys(mutation, "PlayerFiredNormalShot")
+
+                    mutationPlayedInOrder = None
+
+                    chargeShotsFired = MutationParser.findFirstTimestamp(mutation, "PlayerFiredChargedShot")
 
                     timeFirstPositiveCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
                     timeFirstNegativeCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin_Negative(Clone)")
+
+                    timeFirstNormalShotFired = MutationParser.findFirstTimestamp(mutation, "PlayerFiredNormalShot")
+
+                    timeFirstInputKeyPressedLEFT = MutationParser.findFirstTimestamp(mutation, "KeyDown|LeftArrow")
+                    timeFirstInputKeyPressedRIGHT = MutationParser.findFirstTimestamp(mutation, "KeyDown|RightArrow")
+                    timeFirstInputKeyPressedUP = MutationParser.findFirstTimestamp(mutation, "KeyDown|UpArrow")
+                    timeFirstInputKeyPressedDOWN = MutationParser.findFirstTimestamp(mutation, "KeyDown|DownArrow")
+                    timeFirstInputKeyPressedSPACE = MutationParser.findFirstTimestamp(mutation, "KeyDown|Space")
+
+                    inputKeySPACEWasPressedForOneSecond = None
+                    timeLastPositiveCollected = None
+                    totalPositivesCollected = None
+                    timeLastNegativeCollected = None
+                    totalNegativesCollected = None
 
 
                     writer.writerow({'user': logfile.file_base_name,
                                      'mutation': mutation.name,
                                      'hasCues': logfile.has_cues,
-                                     'mutationPlayedInOrder': None,
+                                     'mutationPlayedInOrder': mutationPlayedInOrder,
                                      'playerDeaths': playerDeaths,
                                      'normalShotsFired': normalShotsFired,
-                                     'chargeShotsFired': None,
+                                     'chargeShotsFired': chargeShotsFired,
                                      'timeFirstPositiveCollected': timeFirstPositiveCollected,
-                                     'timeLastPositiveCollected': None,
-                                     'totalPositivesCollected': None,
+                                     'timeLastPositiveCollected': timeLastPositiveCollected,
+                                     'totalPositivesCollected': totalPositivesCollected,
                                      'timeFirstNegativeCollected': timeFirstNegativeCollected,
-                                     'timeLastNegativeCollected': None,
-                                     'totalNegativesCollected': None
+                                     'timeLastNegativeCollected': timeLastNegativeCollected,
+                                     'totalNegativesCollected': totalNegativesCollected,
+                                     'timeFirstNormalShotFired': timeFirstNormalShotFired,
+                                     'timeFirstInputKeyPressedLEFT': timeFirstInputKeyPressedLEFT,
+                                     'timeFirstInputKeyPressedRIGHT': timeFirstInputKeyPressedRIGHT,
+                                     'timeFirstInputKeyPressedUP': timeFirstInputKeyPressedUP,
+                                     'timeFirstInputKeyPressedDOWN': timeFirstInputKeyPressedDOWN,
+                                     'timeFirstInputKeyPressedSPACE': timeFirstInputKeyPressedSPACE,
                                     })
 
         print(f'Write: {output}')

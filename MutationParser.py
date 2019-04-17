@@ -130,3 +130,4 @@ class MutationParser(object):
             timestamp, event = line
             if key in event:
                 return timestamp
+        return 'null'
