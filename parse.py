@@ -2,7 +2,7 @@
 import argparse
 import os
 import sanitizer
-import counter
+import Counter
 import reporter
 from MutationParser import MutationParser as mp
 from LogFile import LogFile

@@ -1,5 +1,6 @@
 import csv
 import random
+from Counter import Counter
 
 
 class CSVWriter(object):
@@ -31,7 +32,9 @@ class CSVWriter(object):
     def write_mutation_report(self, LogFiles, output_folder_path):
 
         output = f"{output_folder_path}MutationReport.csv"
-        header = ['user', 'mutation', 'hasCues','mutationPlayedInOrder', 'playerDeaths']
+        header = ['user', 'mutation', 'hasCues', 'mutationPlayedInOrder',
+                  'playerDeaths', 'normalShotsFired', 'chargeShotsFired', 'timeFirstPositiveCollected',
+                  'timeLastPositiveCollected', 'totalPositivesCollected', 'totalNegativesCollected']
 
         with open(output, 'w+', newline='') as out:
             writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
@@ -39,13 +42,23 @@ class CSVWriter(object):
             writer.writeheader()
             for logfile in LogFiles:
                 for mutation in logfile.mutations:
+
+                    normalShotsFired = Counter.countKeys(mutation, "PlayerFiredNormalShot")
+                    playerDeaths = Counter.countKeys(mutation, "GameEnded|PlayerDied")
+
                     writer.writerow({'user': logfile.file_base_name,
                                      'mutation': mutation.name,
                                      'hasCues': logfile.has_cues,
                                      'mutationPlayedInOrder': None,
-                                     'playerDeaths': None })
+                                     'playerDeaths': playerDeaths,
+                                     'normalShotsFired': normalShotsFired,
+                                     'chargeShotsFired': None,
+                                     'timeFirstPositiveCollected': None,
+                                     'timeLastPositiveCollected': None,
+                                     'totalPositivesCollected': None,
+                                     'totalNegativesCollected': None,
+                                    })
 
         print(f'Write: {output}')
-
 
 # writer = csv.DictWriter(open("ChartData.csv", 'a' ), headers)
