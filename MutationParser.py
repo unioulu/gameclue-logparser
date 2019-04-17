@@ -124,3 +124,9 @@ class MutationParser(object):
                     res.append(i)
             return res
         return -1
+
+    def findFirstTimestamp(Mutation, key):
+        for line in Mutation.data:
+            timestamp, event = line
+            if key in event:
+                return timestamp

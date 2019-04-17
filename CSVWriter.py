@@ -1,6 +1,7 @@
 import csv
 import random
 from Counter import Counter
+from MutationParser import MutationParser
 
 
 class CSVWriter(object):
@@ -33,8 +34,9 @@ class CSVWriter(object):
 
         output = f"{output_folder_path}MutationReport.csv"
         header = ['user', 'mutation', 'hasCues', 'mutationPlayedInOrder',
-                  'playerDeaths', 'normalShotsFired', 'chargeShotsFired', 'timeFirstPositiveCollected',
-                  'timeLastPositiveCollected', 'totalPositivesCollected', 'totalNegativesCollected']
+                  'playerDeaths', 'normalShotsFired', 'chargeShotsFired',
+                  'timeFirstPositiveCollected', 'timeLastPositiveCollected', 'totalPositivesCollected',
+                  'timeFirstNegativeCollected', 'timeLastNegativeCollected', 'totalNegativesCollected']
 
         with open(output, 'w+', newline='') as out:
             writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
@@ -46,6 +48,10 @@ class CSVWriter(object):
                     normalShotsFired = Counter.countKeys(mutation, "PlayerFiredNormalShot")
                     playerDeaths = Counter.countKeys(mutation, "GameEnded|PlayerDied")
 
+                    timeFirstPositiveCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
+                    timeFirstNegativeCollected = MutationParser.findFirstTimestamp(mutation, "PlayerCollidesWithPickUp|Coin_Negative(Clone)")
+
+
                     writer.writerow({'user': logfile.file_base_name,
                                      'mutation': mutation.name,
                                      'hasCues': logfile.has_cues,
@@ -53,10 +59,12 @@ class CSVWriter(object):
                                      'playerDeaths': playerDeaths,
                                      'normalShotsFired': normalShotsFired,
                                      'chargeShotsFired': None,
-                                     'timeFirstPositiveCollected': None,
+                                     'timeFirstPositiveCollected': timeFirstPositiveCollected,
                                      'timeLastPositiveCollected': None,
                                      'totalPositivesCollected': None,
-                                     'totalNegativesCollected': None,
+                                     'timeFirstNegativeCollected': timeFirstNegativeCollected,
+                                     'timeLastNegativeCollected': None,
+                                     'totalNegativesCollected': None
                                     })
 
         print(f'Write: {output}')
