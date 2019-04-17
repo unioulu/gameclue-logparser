@@ -24,5 +24,28 @@ class CSVWriter(object):
             with open(output, 'w+', newline='') as out:
                 writer = csv.writer(out, delimiter=',',
                                     quotechar='"', quoting=csv.QUOTE_ALL)
+                writer.writerow(['timestamp','event'])
                 writer.writerows(mutation.data)
                 print(f"Write: {output}")
+
+    def write_mutation_report(self, LogFiles, output_folder_path):
+
+        output = f"{output_folder_path}MutationReport.csv"
+        header = ['user', 'mutation', 'hasCues','mutationPlayedInOrder', 'playerDeaths']
+
+        with open(output, 'w+', newline='') as out:
+            writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
+                                    quotechar='"', quoting=csv.QUOTE_ALL)
+            writer.writeheader()
+            for logfile in LogFiles:
+                for mutation in logfile.mutations:
+                    writer.writerow({'user': logfile.file_base_name,
+                                     'mutation': mutation.name,
+                                     'hasCues': logfile.has_cues,
+                                     'mutationPlayedInOrder': None,
+                                     'playerDeaths': None })
+
+        print(f'Write: {output}')
+
+
+# writer = csv.DictWriter(open("ChartData.csv", 'a' ), headers)

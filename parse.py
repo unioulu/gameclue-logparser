@@ -117,6 +117,8 @@ def main(args):
                     CSVWriter.write(logFile, args.o)
                     CSVWriter.write_mutation(logFile, args.o)
 
+                CSVWriter.write_mutation_report(LogFiles, args.o)
+
 
 if __name__ == "__main__":
     import sys

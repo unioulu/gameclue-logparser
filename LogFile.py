@@ -2,6 +2,7 @@ import csv
 import os
 from Mutation import Mutation
 from MutationParser import MutationParser
+from LogFileParser import LogFileParser
 
 
 class LogFile(object):
@@ -17,6 +18,7 @@ class LogFile(object):
         self.data = self._read_data(file_path)
         self.num_of_lines = self._calculate_num_of_lines(file_path)
         self.mutations = self._find_mutations()
+        self.has_cues = self._has_cues(file_path)
 
     def _read_data(self, file_path):
         with open(file_path, 'r') as f:
@@ -48,3 +50,7 @@ class LogFile(object):
     def _find_mutations(self):
         """ Finds mutations from a file and return a list of Mutations """
         return MutationParser.parse(self)
+
+    def _has_cues(self, file_path):
+        """ Finds out if the LogFile has Cues. """
+        return LogFileParser.hasCues(self, file_path)
