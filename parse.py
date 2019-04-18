@@ -17,8 +17,9 @@ CSVWriter = CSVWriter()
 def createParser():
     parser = argparse.ArgumentParser(
         description=""" Generates research relevant numbers
-                          out of the gameclue-spacegame logs.""",
-        epilog="Work in progress."
+                          out of the gameclue-spacegame logs.
+
+                          See gameclue-spacegame at: https://github.com/unioulu/gameclue"""
     )
     parser.add_argument("logfiles",
                         nargs='*',
