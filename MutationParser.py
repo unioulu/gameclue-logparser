@@ -104,3 +104,24 @@ class MutationParser(object):
             if key in event:
                 return timestamp
         return 'null'
+
+    def calculateInputKeyIsHeldDownTime(Mutation, key, min_time_held_ms):
+        """ Returns a list of timestamps when "min_time_held_ms" long hold have been initiated. """
+        key_down = "KeyDown|" + key
+        key_up = "KeyUp|" + key
+
+        hold_timestamps = []
+
+        for line in Mutation.data:
+            timestamp, event = line
+            if key_down in event:
+                key_down_timestamp = timestamp
+            if key_up in event:
+                key_up_timestamp = timestamp
+                time_held = float(key_up_timestamp.replace(',', '.')) - float(key_down_timestamp.replace(',', '.'))
+                if (time_held > min_time_held_ms):
+                    hold_timestamps.append(key_down_timestamp)
+
+        if not hold_timestamps:
+            hold_timestamps.append('null')
+        return hold_timestamps
