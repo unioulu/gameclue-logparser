@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import os
-import sanitizer
-import Counter
-from MutationParser import MutationParser as mp
 from LogFile import LogFile
 from GameStartedTimeStampNormalizer import GameStartedTimeStampNormalizer
 from MutationTimeStampNormalizer import MutationTimeStampNormalizer
