@@ -30,11 +30,8 @@ def createParser():
     parser.add_argument("--list",
                         help="List logfiles found on logfiles path.",
                         action='store_true')
-    parser.add_argument("--sanitize",
-                        help="Sanitizes the original game logs.",
-                        action='store_true')
-    parser.add_argument("-o",
-                        help="Output folder path.",
+    parser.add_argument("-o", "--output",
+                        help="Specify the output folder path.",
                         default=DEFAULT_OUT)
     return parser
 
@@ -80,8 +77,6 @@ def main(args):
     if not useDefaultLogFilesPath:
         args.logfiles = args.logfiles[0]
 
-    useDefaultOutputPath = True if args.o in DEFAULT_OUT else False
-
     if folderExist(args.logfiles) and containsFiles(args.logfiles):
 
         for logfile in listLogFilesByFolderPath(args):
@@ -93,14 +88,13 @@ def main(args):
             for logfile in LogFiles:
                 print(logfile.path)
 
-        if args.sanitize:
-            print(f"Sanitizing...")
-            for i, logfile in enumerate(LogFiles):
-                LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
-                LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
-
         if args.o:
             if folderExist(args.o):
+                print(f"Sanitizing...")
+                for i, logfile in enumerate(LogFiles):
+                    LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
+                    LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
+
                 print(f"Writing files... ({args.o})")
                 for logFile in LogFiles:
                     CSVWriter.write(logFile, args.o)
