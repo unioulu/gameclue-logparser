@@ -95,7 +95,8 @@ class CSVWriter(object):
                     timeFirstInputKeyPressedSPACE = MutationParser.findFirstTimestamp(
                         mutation, "KeyDown|Space")
 
-                    inputKeySPACEWasPressedForOneSecond = None
+                    inputKeySPACEWasPressedForOneSecond = MutationParser.calculateInputKeyIsHeldDownTime(
+                        mutation, "Space", 1)[0]
                     timeLastPositiveCollected = None
                     totalPositivesCollected = None
                     timeLastNegativeCollected = None
