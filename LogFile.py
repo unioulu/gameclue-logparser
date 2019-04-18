@@ -1,6 +1,5 @@
 import csv
 import os
-from Mutation import Mutation
 from MutationParser import MutationParser
 from LogFileParser import LogFileParser
 
