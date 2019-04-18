@@ -9,10 +9,9 @@ from CSVWriter import CSVWriter
 DEFAULT_IN = 'logs/'
 DEFAULT_OUT = 'output/'
 LogFiles = []
-gameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
-mutationTimeStampNormalizer = MutationTimeStampNormalizer()
+GameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
+MutationTimeStampNormalizer = MutationTimeStampNormalizer()
 CSVWriter = CSVWriter()
-
 
 def createParser():
     parser = argparse.ArgumentParser(
@@ -28,7 +27,7 @@ def createParser():
     parser.add_argument("--list",
                         help="List logfiles found on logfiles path.",
                         action='store_true')
-    parser.add_argument("-o", "--output",
+    parser.add_argument("-o",
                         help="Specify the output folder path.",
                         default=DEFAULT_OUT)
     return parser
@@ -90,8 +89,8 @@ def main(args):
             if folderExist(args.o):
                 print(f"Sanitizing...")
                 for i, logfile in enumerate(LogFiles):
-                    LogFiles[i] = gameStartedTimeStampNormalizer.sanitize(logfile)
-                    LogFiles[i] = mutationTimeStampNormalizer.sanitize(logfile)
+                    LogFiles[i] = GameStartedTimeStampNormalizer.sanitize(logfile)
+                    LogFiles[i] = MutationTimeStampNormalizer.sanitize(logfile)
 
                 print(f"Writing files... ({args.o})")
                 for logFile in LogFiles:

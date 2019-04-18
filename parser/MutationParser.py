@@ -26,7 +26,7 @@ class MutationParser(object):
             mutationEnd = mutation[1][1]
             mutationOrder = i
 
-            with open(f'{LogFile.path}') as f:
+            with open(LogFile.path) as f:
                 reader = csv.reader(f, delimiter=';', quotechar='"')
                 for row in islice(reader, mutationStart, mutationEnd):
                     mutation_data.append(row)
