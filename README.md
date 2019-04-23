@@ -13,28 +13,29 @@ To run this programs, python 3.X is required.
 
 # Running
 
-You can run this program by calling ``./parse.py``, like this:
+You can run this program from the root of this project by calling ``./parser/parse.py``, like this:
 ```shell
-$ ./parse.py logs/ --output output/
+$ ./parser/parse.py logs/ --output output/
 ```
+
+*Note*: Please keep in mind that logfiles folder and output path must include the trailing slash (`/`).
 
 # Arguments
 
 ```
-$ ./parse.py --help
-usage: parse.py [-h] [--list] [-o OUTPUT] [logfiles [logfiles ...]]
+$ ./parser/parse.py --help
+usage: parse.py [-h] [--list] [-o O] [logfiles [logfiles ...]]
 
 Generates research relevant numbers out of the gameclue-spacegame logs. See
 gameclue-spacegame at: https://github.com/unioulu/gameclue
 
 positional arguments:
-  logfiles              Log files folder path.
+  logfiles    Log files folder path.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --list                List logfiles found on logfiles path.
-  -o OUTPUT, --output OUTPUT
-                        Specify the output folder path.
+  -h, --help  show this help message and exit
+  --list      List logfiles found on logfiles path.
+  -o O        Specify the output folder path.
 ```
 
 [unioulu/gameclue]: (https://github.com/unioulu/gameclue)
