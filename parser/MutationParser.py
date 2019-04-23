@@ -134,15 +134,31 @@ class MutationParser(object):
             hold_timestamps.append('null')
         return hold_timestamps
 
-    def getOccurencesPerMinute(Mutation):
+    def getInputsPerMinute(Mutation, key = None):
         amnt = 0
         firstOccurence = 0
         lastOccurence = 0
-        for line in Mutation.data:
-            timestamp, event = line
-            if (amnt == 1):
-                firstOccurence = float(timestamp)
-            if (event.startswith("KeyDown")):
-                amnt = amnt + 1
-                lastOccurence = float(timestamp)
-        return amnt / ((lastOccurence - firstOccurence)/60)
+        if (key == None):
+            for line in Mutation.data:
+                timestamp, event = line
+                if (amnt == 1):
+                    firstOccurence = float(timestamp)
+                if (event.startswith("KeyDown")):
+                    amnt = amnt + 1
+                    lastOccurence = float(timestamp)
+        else:
+            for line in Mutation.data:
+                timestamp, event = line
+                if (amnt == 1):
+                    firstOccurence = float(timestamp)
+                if (event == key):
+                    amnt = amnt + 1
+                    lastOccurence = float(timestamp)
+        if (lastOccurence == 0 and firstOccurence == 0):
+            print("No occurences")
+            return None
+        elif (lastOccurence == firstOccurence):
+            print("Occurence happened only once")
+            return None
+        else:
+            return amnt / ((lastOccurence - firstOccurence)/60)

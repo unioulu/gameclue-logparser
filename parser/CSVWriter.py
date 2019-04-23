@@ -91,9 +91,10 @@ class CSVWriter(object):
                     playerLongestTimeAlive = None
                     playerAverageTimeAlive = None
                     actionsPerMinute = None
-                    shotsPerMinute = None
-                    inputsPerMinute = MutationParser.getOccurencesPerMinute(mutation)
-
+                    
+                    shotsPerMinute = MutationParser.getInputsPerMinute(
+                        mutation, "KeyDown|Space")
+                    inputsPerMinute = MutationParser.getInputsPerMinute(mutation)
                     timeFirstInputKeyPressedLEFT = MutationParser.findFirstTimestamp(
                         mutation, "KeyDown|LeftArrow")
                     timeFirstInputKeyPressedRIGHT = MutationParser.findFirstTimestamp(
