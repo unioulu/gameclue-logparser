@@ -26,7 +26,7 @@ class MutationParser(object):
             mutationEnd = mutation[1][1]
             mutationOrder = i
 
-            with open(f'{LogFile.path}') as f:
+            with open(LogFile.path) as f:
                 reader = csv.reader(f, delimiter=';', quotechar='"')
                 for row in islice(reader, mutationStart, mutationEnd):
                     mutation_data.append(row)
@@ -104,6 +104,14 @@ class MutationParser(object):
             if key in event:
                 return timestamp
         return 'null'
+
+    def findLastTimeStamp(Mutation, key):
+        last = 'null'
+        for line in Mutation.data:
+            timestamp, event = line
+            if key in event:
+                last = timestamp
+        return last
 
     def calculateInputKeyIsHeldDownTime(Mutation, key, min_time_held_ms):
         """ Returns a list of timestamps when "min_time_held_ms" long hold have been initiated. """

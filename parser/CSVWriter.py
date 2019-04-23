@@ -1,5 +1,5 @@
 import csv
-from Counter import Counter
+from util.Counter import Counter
 from MutationParser import MutationParser
 
 
@@ -31,7 +31,8 @@ class CSVWriter(object):
 
     def write_mutation_report(self, LogFiles, output_folder_path):
 
-        output = f"{output_folder_path}MutationReport.csv"
+        filename = "MutationReport.csv"
+        output = f"{output_folder_path}{filename}"
         header = ['user',
                   'mutation',
                   'hasCues',
@@ -84,6 +85,15 @@ class CSVWriter(object):
                     timeFirstNormalShotFired = MutationParser.findFirstTimestamp(
                         mutation, "PlayerFiredNormalShot")
 
+                    totalPositivesSpawned = None
+                    totalNegativesSpawned = None
+                    playerShortestTimeAlive = None
+                    playerLongestTimeAlive = None
+                    playerAverageTimeAlive = None
+                    actionsPerMinute = None
+                    shotsPerMinute = None
+                    inputsPerMinute = None
+
                     timeFirstInputKeyPressedLEFT = MutationParser.findFirstTimestamp(
                         mutation, "KeyDown|LeftArrow")
                     timeFirstInputKeyPressedRIGHT = MutationParser.findFirstTimestamp(
@@ -97,10 +107,12 @@ class CSVWriter(object):
 
                     inputKeySPACEWasPressedForOneSecond = MutationParser.calculateInputKeyIsHeldDownTime(
                         mutation, "Space", 1)[0]
-                    timeLastPositiveCollected = None
-                    totalPositivesCollected = None
-                    timeLastNegativeCollected = None
-                    totalNegativesCollected = None
+                    timeLastPositiveCollected = MutationParser.findLastTimeStamp(
+                        mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
+                    totalPositivesCollected = Counter.countKeys(mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
+                    timeLastNegativeCollected = MutationParser.findLastTimeStamp(
+                        mutation, "PlayerCollidesWithPickUp|Coin_Negative(Clone)")
+                    totalNegativesCollected = Counter.countKeys(mutation, "PlayerCollidesWithPickUp|Coin_Negative(Clone)")
 
                     writer.writerow({'user': logfile.file_base_name,
                                      'mutation': mutation.name,
@@ -116,6 +128,14 @@ class CSVWriter(object):
                                      'timeLastNegativeCollected': timeLastNegativeCollected,
                                      'totalNegativesCollected': totalNegativesCollected,
                                      'timeFirstNormalShotFired': timeFirstNormalShotFired,
+                                     'totalPositivesSpawned': totalPositivesSpawned,
+                                     'totalNegativesSpawned': totalNegativesSpawned,
+                                     'playerShortestTimeAlive': playerShortestTimeAlive,
+                                     'playerLongestTimeAlive': playerLongestTimeAlive,
+                                     'playerAverageTimeAlive': playerAverageTimeAlive,
+                                     'actionsPerMinute': actionsPerMinute,
+                                     'shotsPerMinute': shotsPerMinute,
+                                     'inputsPerMinute': inputsPerMinute,
                                      'timeFirstInputKeyPressedLEFT': timeFirstInputKeyPressedLEFT,
                                      'timeFirstInputKeyPressedRIGHT': timeFirstInputKeyPressedRIGHT,
                                      'timeFirstInputKeyPressedUP': timeFirstInputKeyPressedUP,

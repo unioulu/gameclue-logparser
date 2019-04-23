@@ -1,5 +1,6 @@
 import csv
 
+
 class LogFileParser(object):
     """docstring for LogFileParser."""
 
@@ -26,7 +27,7 @@ class LogFileParser(object):
         """
         with open(file_path, 'r') as f:
             reader = csv.reader(f, delimiter=';', quotechar='"')
-            first_line = next(reader) # First line
+            first_line = next(reader)  # First line
             second_line = next(reader)
 
             first_timestamp, first_event = first_line
