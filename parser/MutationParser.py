@@ -105,6 +105,14 @@ class MutationParser(object):
                 return timestamp
         return 'null'
 
+    def findLastTimeStamp(Mutation, key):
+        last = 'null'
+        for line in Mutation.data:
+            timestamp, event = line
+            if key in event:
+                last = timestamp
+        return last
+
     def calculateInputKeyIsHeldDownTime(Mutation, key, min_time_held_ms):
         """ Returns a list of timestamps when "min_time_held_ms" long hold have been initiated. """
         key_down = "KeyDown|" + key

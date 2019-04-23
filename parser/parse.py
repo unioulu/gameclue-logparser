@@ -13,6 +13,7 @@ GameStartedTimeStampNormalizer = GameStartedTimeStampNormalizer()
 MutationTimeStampNormalizer = MutationTimeStampNormalizer()
 CSVWriter = CSVWriter()
 
+
 def createParser():
     parser = argparse.ArgumentParser(
         description=""" Generates research relevant numbers
@@ -52,7 +53,7 @@ def folderExist(path):
         os.listdir(path)
         return True
     except FileNotFoundError:
-        parser.error(f'Folder: \"{path}\" does not exist! Incorrect path?')
+        parser.error(f"Folder: \"{path}\" does not exist! Incorrect path?")
         return False
 
 
@@ -96,7 +97,6 @@ def main(args):
                 for logFile in LogFiles:
                     CSVWriter.write(logFile, args.o)
                     CSVWriter.write_mutation(logFile, args.o)
-
                 CSVWriter.write_mutation_report(LogFiles, args.o)
 
 
