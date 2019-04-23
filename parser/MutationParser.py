@@ -133,3 +133,16 @@ class MutationParser(object):
         if not hold_timestamps:
             hold_timestamps.append('null')
         return hold_timestamps
+
+    def getOccurencesPerMinute(Mutation):
+        amnt = 0
+        firstOccurence = 0
+        lastOccurence = 0
+        for line in Mutation.data:
+            timestamp, event = line
+            if (amnt == 1):
+                firstOccurence = float(timestamp)
+            if (event.startswith("KeyDown")):
+                amnt = amnt + 1
+                lastOccurence = float(timestamp)
+        return amnt / ((lastOccurence - firstOccurence)/60)
