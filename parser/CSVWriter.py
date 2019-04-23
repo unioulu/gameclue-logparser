@@ -85,13 +85,15 @@ class CSVWriter(object):
                     timeFirstNormalShotFired = MutationParser.findFirstTimestamp(
                         mutation, "PlayerFiredNormalShot")
 
-                    totalPositivesSpawned = None
-                    totalNegativesSpawned = None
+                    totalPositivesSpawned = MutationParser.getNumberOfOccurences(
+                        mutation, "PickUpSpawned|Coin(Clone)")
+                    totalNegativesSpawned = MutationParser.getNumberOfOccurences(
+                        mutation, "PickUpSpawned|Coin_Negative(Clone)")
                     playerShortestTimeAlive = None
                     playerLongestTimeAlive = None
                     playerAverageTimeAlive = None
                     actionsPerMinute = None
-                    
+
                     shotsPerMinute = MutationParser.getInputsPerMinute(
                         mutation, "KeyDown|Space")
                     inputsPerMinute = MutationParser.getInputsPerMinute(mutation)

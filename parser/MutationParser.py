@@ -78,6 +78,14 @@ class MutationParser(object):
 
         return mutationRanges
 
+    def getNumberOfOccurences(Mutation, occurence):
+        amnt = 0
+        for line in Mutation.data:
+            timestamp, event = line
+            if(event == occurence):
+                amnt += 1
+        return amnt
+
     def getLastLineNumber(logfile):
         return sum(1 for line in open(logfile))
 
@@ -144,7 +152,7 @@ class MutationParser(object):
                 if (amnt == 1):
                     firstOccurence = float(timestamp)
                 if (event.startswith("KeyDown")):
-                    amnt = amnt + 1
+                    amnt += 1
                     lastOccurence = float(timestamp)
         else:
             for line in Mutation.data:
@@ -152,7 +160,7 @@ class MutationParser(object):
                 if (amnt == 1):
                     firstOccurence = float(timestamp)
                 if (event == key):
-                    amnt = amnt + 1
+                    amnt += 1
                     lastOccurence = float(timestamp)
         if (lastOccurence == 0 and firstOccurence == 0):
             print("No occurences")
@@ -160,5 +168,4 @@ class MutationParser(object):
         elif (lastOccurence == firstOccurence):
             print("Occurence happened only once")
             return None
-        else:
-            return amnt / ((lastOccurence - firstOccurence)/60)
+        return amnt / ((lastOccurence - firstOccurence)/60)
