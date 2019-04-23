@@ -18,8 +18,10 @@ You can run this program from the root of this project by calling ``./parser/par
 $ ./parser/parse.py logs/ --output output/
 ```
 
-*Note*: Please keep in mind that logfiles folder and output path must include the trailing slash (`/`).
-*Note*: The logfiles path must containt the logfiles only, _without_the_fps_logs_ since they are not currently supported.
+## Caveats
+
+- *Note*: Given logfiles path must be an existing folder and the output path *must* include a trailing slash (`/`).
+- *Note*: Given logfiles path must contain logfiles produced by the [unioulu/gameclue] *only* _without_the_fps_logs_. Parsing fps logs are currently not supported.
 
 # Arguments
 
