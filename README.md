@@ -19,6 +19,7 @@ $ ./parser/parse.py logs/ --output output/
 ```
 
 *Note*: Please keep in mind that logfiles folder and output path must include the trailing slash (`/`).
+*Note*: The logfiles path must containt the logfiles only, _without_the_fps_logs_ since they are not currently supported.
 
 # Arguments
 
