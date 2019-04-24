@@ -142,6 +142,14 @@ class MutationParser(object):
             hold_timestamps.append('null')
         return hold_timestamps
 
+    def findOccurencesThatStartWith(Mutation, occurence):
+        timestamps = []
+        for line in Mutation.data:
+            timestamp, event = line
+            if event.startswith(occurence):
+                timestamps.append(float(timestamp))
+        return timestamps
+
     def getInputsPerMinute(Mutation, key = None):
         amnt = 0
         firstOccurence = 0
