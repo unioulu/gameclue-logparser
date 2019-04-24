@@ -60,7 +60,9 @@ class CSVWriter(object):
                   'timeFirstInputKeyPressedUP',
                   'timeFirstInputKeyPressedDOWN',
                   'timeFirstInputKeyPressedSPACE',
-                  'inputKeySPACEWasPressedForOneSecond']
+                  'inputKeySPACEWasPressedForOneSecond',
+                  'inputKeySPACEWasPressedFor200ms',
+                  'totalKeySPACEWasPressedFor200ms']
 
         with open(output, 'w+', newline='') as out:
             writer = csv.DictWriter(out, fieldnames=header, delimiter=',',
@@ -107,6 +109,10 @@ class CSVWriter(object):
 
                     inputKeySPACEWasPressedForOneSecond = MutationParser.calculateInputKeyIsHeldDownTime(
                         mutation, "Space", 1)[0]
+                    inputKeySPACEWasPressedFor200ms = MutationParser.calculateInputKeyIsHeldDownTime(
+                        mutation, "Space", 0.2)[0]
+                    totalKeySPACEWasPressedFor200ms = len(MutationParser.calculateInputKeyIsHeldDownTime(
+                        mutation, "Space", 0.2))
                     timeLastPositiveCollected = MutationParser.findLastTimeStamp(
                         mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
                     totalPositivesCollected = Counter.countKeys(mutation, "PlayerCollidesWithPickUp|Coin(Clone)")
@@ -141,7 +147,9 @@ class CSVWriter(object):
                                      'timeFirstInputKeyPressedUP': timeFirstInputKeyPressedUP,
                                      'timeFirstInputKeyPressedDOWN': timeFirstInputKeyPressedDOWN,
                                      'timeFirstInputKeyPressedSPACE': timeFirstInputKeyPressedSPACE,
-                                     'inputKeySPACEWasPressedForOneSecond': inputKeySPACEWasPressedForOneSecond
+                                     'inputKeySPACEWasPressedForOneSecond': inputKeySPACEWasPressedForOneSecond,
+                                     'inputKeySPACEWasPressedFor200ms': inputKeySPACEWasPressedFor200ms,
+                                     'totalKeySPACEWasPressedFor200ms': totalKeySPACEWasPressedFor200ms
                                      })
 
         print(f'Write: {output}')
