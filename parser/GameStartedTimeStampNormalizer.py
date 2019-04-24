@@ -27,7 +27,7 @@ class GameStartedTimeStampNormalizer(LogFileSanitizer):
                 LogFile.data[i][0] = '%g' % (float(timestamp.replace(
                     ',', '.')) - float(timestamp_delta.replace(',', '.')))
         else:
-            print(f"Could not find the first occurence of {logEntry} in {LogFile.path}")
+            print(f"Could not find the first occurence of \"GameStarted\" in {LogFile.path}")
 
         return LogFile
 
