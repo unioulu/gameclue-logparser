@@ -52,7 +52,6 @@ class CSVWriter(object):
                   'playerShortestTimeAlive',
                   'playerAverageTimeAlive',
                   'playerLongestTimeAlive',
-                  'actionsPerMinute',
                   'shotsPerMinute',
                   'inputsPerMinute',
                   'timeFirstInputKeyPressedLEFT',
@@ -69,6 +68,7 @@ class CSVWriter(object):
                                     quotechar='"', quoting=csv.QUOTE_ALL)
             writer.writeheader()
             for logfile in LogFiles:
+                playerTimeAlive = 0
                 for mutation in logfile.mutations:
 
                     playerDeaths = Counter.countKeys(
@@ -87,15 +87,16 @@ class CSVWriter(object):
                     timeFirstNormalShotFired = MutationParser.findFirstTimestamp(
                         mutation, "PlayerFiredNormalShot")
 
-                    totalPositivesSpawned = None
-                    totalNegativesSpawned = None
-                    playerShortestTimeAlive = None
-                    playerLongestTimeAlive = None
-                    playerAverageTimeAlive = None
-                    actionsPerMinute = None
-                    shotsPerMinute = None
-                    inputsPerMinute = None
+                    totalPositivesSpawned = Counter.countKeys(
+                        mutation, "PickUpSpawned|Coin(Clone)")
+                    totalNegativesSpawned = Counter.countKeys(
+                        mutation, "PickUpSpawned|Coin_Negative(Clone)")
 
+                    playerLongestTimeAlive, playerShortestTimeAlive, playerAverageTimeAlive = MutationParser.calculateDiffs(mutation, "PlayerDied")
+
+                    shotsPerMinute = MutationParser.getInputsPerMinute(
+                        mutation, "KeyDown|Space")
+                    inputsPerMinute = MutationParser.getInputsPerMinute(mutation)
                     timeFirstInputKeyPressedLEFT = MutationParser.findFirstTimestamp(
                         mutation, "KeyDown|LeftArrow")
                     timeFirstInputKeyPressedRIGHT = MutationParser.findFirstTimestamp(
@@ -139,7 +140,6 @@ class CSVWriter(object):
                                      'playerShortestTimeAlive': playerShortestTimeAlive,
                                      'playerLongestTimeAlive': playerLongestTimeAlive,
                                      'playerAverageTimeAlive': playerAverageTimeAlive,
-                                     'actionsPerMinute': actionsPerMinute,
                                      'shotsPerMinute': shotsPerMinute,
                                      'inputsPerMinute': inputsPerMinute,
                                      'timeFirstInputKeyPressedLEFT': timeFirstInputKeyPressedLEFT,

@@ -1,5 +1,6 @@
 import sanitizer as s
 import csv
+import statistics
 from itertools import islice
 from Mutation import Mutation
 import operator
@@ -78,6 +79,14 @@ class MutationParser(object):
 
         return mutationRanges
 
+    def getNumberOfOccurences(Mutation, occurence):
+        amnt = 0
+        for line in Mutation.data:
+            timestamp, event = line
+            if(event == occurence):
+                amnt += 1
+        return amnt
+
     def getLastLineNumber(logfile):
         return sum(1 for line in open(logfile))
 
@@ -133,3 +142,60 @@ class MutationParser(object):
         if not hold_timestamps:
             hold_timestamps.append('null')
         return hold_timestamps
+
+    def findOccurencesThatStartWith(Mutation, occurence):
+        timestamps = []
+        for line in Mutation.data:
+            timestamp, event = line
+            if event.startswith(occurence):
+                timestamps.append(float(timestamp))
+        return timestamps
+
+    def getInputsPerMinute(Mutation, key = None):
+        amnt = 0
+        firstOccurence = 0
+        lastOccurence = 0
+        if (key == None):
+            for line in Mutation.data:
+                timestamp, event = line
+                if (amnt == 1):
+                    firstOccurence = float(timestamp)
+                if (event.startswith("KeyDown")):
+                    amnt += 1
+                    lastOccurence = float(timestamp)
+        else:
+            for line in Mutation.data:
+                timestamp, event = line
+                if (amnt == 1):
+                    firstOccurence = float(timestamp)
+                if (event == key):
+                    amnt += 1
+                    lastOccurence = float(timestamp)
+        if (lastOccurence == 0 and firstOccurence == 0):
+            print("No occurences")
+            return None
+        elif (lastOccurence == firstOccurence):
+            print("Occurence happened only once")
+            return None
+        return amnt / ((lastOccurence - firstOccurence)/60)
+
+    def calculateDiffs (Mutation, occurence):
+        diffs = []
+        lastTime = 0
+        times = MutationParser.findOccurencesThatStartWith(
+            Mutation, occurence)
+        for c, time in enumerate(times):
+            if (c > 0):
+                diffs.append(time - lastTime)
+            else:
+                diffs.append(time)
+            lastTime = time
+        if (len(diffs) > 0):
+            longest = max(diffs)
+            shortest = min(diffs)
+            average = statistics.mean(diffs)
+        else:
+            longest = 'null'
+            shortest = 'null'
+            average = 'null'
+        return longest, shortest, average
