@@ -1,5 +1,6 @@
 import sanitizer as s
 import csv
+import statistics
 from itertools import islice
 from Mutation import Mutation
 import operator
@@ -177,3 +178,24 @@ class MutationParser(object):
             print("Occurence happened only once")
             return None
         return amnt / ((lastOccurence - firstOccurence)/60)
+
+    def calculateDiffs (Mutation, occurence):
+        diffs = []
+        lastTime = 0
+        times = MutationParser.findOccurencesThatStartWith(
+            Mutation, occurence)
+        for c, time in enumerate(times):
+            if (c > 0):
+                diffs.append(time - lastTime)
+            else:
+                diffs.append(time)
+            lastTime = time
+        if (len(diffs) > 0):
+            longest = max(diffs)
+            shortest = min(diffs)
+            average = statistics.mean(diffs)
+        else:
+            longest = 'null'
+            shortest = 'null'
+            average = 'null'
+        return longest, shortest, average

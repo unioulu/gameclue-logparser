@@ -1,4 +1,5 @@
 import csv
+import statistics
 from util.Counter import Counter
 from MutationParser import MutationParser
 
@@ -89,24 +90,8 @@ class CSVWriter(object):
                         mutation, "PickUpSpawned|Coin(Clone)")
                     totalNegativesSpawned = Counter.countKeys(
                         mutation, "PickUpSpawned|Coin_Negative(Clone)")
-                    playerShortestTimeAlive = None
-                    playerAverageTimeAlive = None
 
-                    diffs = []
-                    lastTime = 0
-                    times = MutationParser.findOccurencesThatStartWith(
-                        mutation, "PlayerDied")
-                    for c, time in enumerate(times):
-                        if (c > 0):
-                            diffs.append(time - lastTime)
-                        else:
-                            diffs.append(time)
-                        lastTime = time
-
-                    if (len(diffs) > 0):
-                        playerLongestTimeAlive = max(diffs)
-                    else:
-                        playerLongestTimeAlive = None
+                    playerLongestTimeAlive, playerShortestTimeAlive, playerAverageTimeAlive = MutationParser.calculateDiffs(mutation, "PlayerDied")
 
                     shotsPerMinute = MutationParser.getInputsPerMinute(
                         mutation, "KeyDown|Space")
