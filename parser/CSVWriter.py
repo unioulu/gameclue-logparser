@@ -1,5 +1,4 @@
 import csv
-import statistics
 from util.Counter import Counter
 from MutationParser import MutationParser
 
