@@ -151,7 +151,7 @@ class MutationParser(object):
                 timestamps.append(float(timestamp))
         return timestamps
 
-    def getInputsPerMinute(Mutation, end = None):
+    def getInputsPerMinute(Mutation, start = None, end = None):
         amnt = 0
         firstOccurence = 0
         lastOccurence = 0
@@ -159,12 +159,12 @@ class MutationParser(object):
             timestamp, event = line
             if (amnt == 1):
                 firstOccurence = float(timestamp)
-            if (end == None):
+            if (start == None or end == None):
                 if (event.startswith("KeyDown")):
                     amnt += 1
                     lastOccurence = float(timestamp)
             else:
-                if (event.endswith(end)):
+                if (event.startswith(start) and event.endswith(end)):
                     amnt += 1
                     lastOccurence = float(timestamp)
         if (amnt == 0):
