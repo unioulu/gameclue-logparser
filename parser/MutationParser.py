@@ -189,7 +189,7 @@ class MutationParser(object):
         if (len(diffs) > 0):
             longest = max(diffs)
             shortest = min(diffs)
-            average = statistics.mean(diffs)
+            average = statistics.median(diffs)
         else:
             return None, None, None
         return round(longest, 3), round(shortest, 3), round(average, 3)
