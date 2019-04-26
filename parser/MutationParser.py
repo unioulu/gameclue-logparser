@@ -112,10 +112,10 @@ class MutationParser(object):
             timestamp, event = line
             if key in event:
                 return timestamp
-        return 'null'
+        return None
 
     def findLastTimeStamp(Mutation, key):
-        last = 'null'
+        last = None
         for line in Mutation.data:
             timestamp, event = line
             if key in event:
@@ -140,7 +140,7 @@ class MutationParser(object):
                     hold_timestamps.append(key_down_timestamp)
 
         if not hold_timestamps:
-            hold_timestamps.append('null')
+            hold_timestamps.append(None)
         return hold_timestamps
 
     def findOccurencesThatStartWith(Mutation, occurence):
@@ -151,33 +151,29 @@ class MutationParser(object):
                 timestamps.append(float(timestamp))
         return timestamps
 
-    def getInputsPerMinute(Mutation, key = None):
+    def getInputsPerMinute(Mutation, end = None):
         amnt = 0
         firstOccurence = 0
         lastOccurence = 0
-        if (key == None):
-            for line in Mutation.data:
-                timestamp, event = line
-                if (amnt == 1):
-                    firstOccurence = float(timestamp)
+        for line in Mutation.data:
+            timestamp, event = line
+            if (amnt == 1):
+                firstOccurence = float(timestamp)
+            if (end == None):
                 if (event.startswith("KeyDown")):
                     amnt += 1
                     lastOccurence = float(timestamp)
-        else:
-            for line in Mutation.data:
-                timestamp, event = line
-                if (amnt == 1):
-                    firstOccurence = float(timestamp)
-                if (event == key):
+            else:
+                if (event.endswith(end)):
                     amnt += 1
                     lastOccurence = float(timestamp)
-        if (lastOccurence == 0 and firstOccurence == 0):
+        if (amnt == 0):
             print("No occurences")
             return None
         elif (lastOccurence == firstOccurence):
             print("Occurence happened only once")
             return None
-        return amnt / ((lastOccurence - firstOccurence)/60)
+        return round(amnt / ((lastOccurence - firstOccurence)/60), 3)
 
     def calculateDiffs (Mutation, occurence):
         diffs = []
@@ -195,7 +191,5 @@ class MutationParser(object):
             shortest = min(diffs)
             average = statistics.mean(diffs)
         else:
-            longest = 'null'
-            shortest = 'null'
-            average = 'null'
-        return longest, shortest, average
+            return None, None, None
+        return round(longest, 3), round(shortest, 3), round(average, 3)
