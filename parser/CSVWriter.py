@@ -37,7 +37,15 @@ class CSVWriter(object):
                   'mutation',
                   'hasCues',
                   'mutationPlayedInOrder',
+                  'shortestMutationTime',
+                  'longestMutationTime',
+                  'averageMutationTime',
                   'playerDeaths',
+                  'playerRecievedAsteroidDmg',
+                  'playerRecievedDebrisDmg',
+                  'playerRecievedHoverEnemyDmg',
+                  'playerRecievedBulletDmg',
+                  'playerRecievedShootingEnemyDmg',
                   'normalShotsFired',
                   'chargeShotsFired',
                   'timeFirstPositiveCollected',
@@ -72,8 +80,24 @@ class CSVWriter(object):
                 playerTimeAlive = 0
                 for mutation in logfile.mutations:
 
+                    shortestMutationTime = None
+                    longestMutationTime = None
+                    averageMutationTime = None
+
                     playerDeaths = Counter.countKeys(
                         mutation, "GameEnded|PlayerDied")
+
+                    playerRecievedAsteroidDmg = Counter.countStartsWith(
+                        mutation, "PlayerReceivedDamage|Asteroid")
+                    playerRecievedDebrisDmg = Counter.countStartsWith(
+                        mutation, "PlayerReceivedDamage|Debris")
+                    playerRecievedHoverEnemyDmg = Counter.countStartsWith(
+                        mutation, "PlayerReceivedDamage|HoverEnemy")
+                    playerRecievedBulletDmg = Counter.countStartsWith(
+                        mutation, "PlayerReceivedDamage|EnemyBullet")
+                    playerRecievedShootingEnemyDmg = Counter.countStartsWith(
+                        mutation, "PlayerReceivedDamage|ShootingEnemy")
+
                     normalShotsFired = Counter.countKeys(
                         mutation, "PlayerFiredNormalShot")
 
@@ -129,7 +153,15 @@ class CSVWriter(object):
                                      'mutation': mutation.name,
                                      'hasCues': logfile.has_cues,
                                      'mutationPlayedInOrder': mutation.played_in_order,
+                                     'shortestMutationTime': shortestMutationTime,
+                                     'longestMutationTime': longestMutationTime,
+                                     'averageMutationTime': averageMutationTime,
                                      'playerDeaths': playerDeaths,
+                                     'playerRecievedAsteroidDmg': playerRecievedAsteroidDmg,
+                                     'playerRecievedDebrisDmg': playerRecievedDebrisDmg,
+                                     'playerRecievedHoverEnemyDmg': playerRecievedHoverEnemyDmg,
+                                     'playerRecievedBulletDmg': playerRecievedBulletDmg,
+                                     'playerRecievedShootingEnemyDmg': playerRecievedShootingEnemyDmg,
                                      'normalShotsFired': normalShotsFired,
                                      'chargeShotsFired': chargeShotsFired,
                                      'timeFirstPositiveCollected': timeFirstPositiveCollected,

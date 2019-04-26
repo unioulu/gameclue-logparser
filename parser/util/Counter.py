@@ -10,3 +10,11 @@ class Counter(object):
             if key in row:
                 count = count + 1
         return count
+
+    def countStartsWith(Log, key):
+        count = 0
+        for row in Log.data:
+            timestamp, event = row
+            if event.startswith(key):
+                count = count + 1
+        return count
