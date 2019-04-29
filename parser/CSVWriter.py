@@ -38,6 +38,7 @@ class CSVWriter(object):
                   'hasCues',
                   'mutationPlayedInOrder',
                   'mutationTime',
+                  'totalMutationPlaytimes',
                   'playerDeaths',
                   'playerRecievedAsteroidDmg',
                   'playerRecievedDebrisDmg',
@@ -58,6 +59,9 @@ class CSVWriter(object):
                   'playerShortestTimeAlive',
                   'playerAverageTimeAlive',
                   'playerLongestTimeAlive',
+                  'playerShortestGameTime',
+                  'playerAverageGameTime',
+                  'playerLongestGameTime',
                   'shotsPerMinute',
                   'inputsPerMinute',
                   'movementsPerMinute',
@@ -78,6 +82,8 @@ class CSVWriter(object):
                 playerTimeAlive = 0
                 for mutation in logfile.mutations:
 
+                    totalMutationPlaytimes = Counter.countStartsWith(
+                        mutation, "GameStarted")
                     playerDeaths = Counter.countKeys(
                         mutation, "GameEnded|PlayerDied")
 
@@ -112,6 +118,8 @@ class CSVWriter(object):
                         mutation, "PickUpSpawned|Coin_Negative(Clone)")
 
                     playerLongestTimeAlive, playerShortestTimeAlive, playerAverageTimeAlive = MutationParser.calculateDiffs(mutation, "PlayerDied")
+
+                    playerLongestGameTime, playerShortestGameTime, playerAverageGameTime = MutationParser.calculateRanges(mutation, ["GameStarted"], ["PlayerDied", "LastRow"])
 
                     shotsPerMinute = MutationParser.getInputsPerMinute(
                         mutation, "KeyDown|Space", "KeyDown|Space")
@@ -148,6 +156,7 @@ class CSVWriter(object):
                                      'hasCues': logfile.has_cues,
                                      'mutationPlayedInOrder': mutation.played_in_order,
                                      'mutationTime': mutation.data[-1][0],
+                                     'totalMutationPlaytimes': totalMutationPlaytimes,
                                      'playerDeaths': playerDeaths,
                                      'playerRecievedAsteroidDmg': playerRecievedAsteroidDmg,
                                      'playerRecievedDebrisDmg': playerRecievedDebrisDmg,
@@ -168,6 +177,9 @@ class CSVWriter(object):
                                      'playerShortestTimeAlive': playerShortestTimeAlive,
                                      'playerLongestTimeAlive': playerLongestTimeAlive,
                                      'playerAverageTimeAlive': playerAverageTimeAlive,
+                                     'playerShortestGameTime': playerShortestGameTime,
+                                     'playerAverageGameTime': playerAverageGameTime,
+                                     'playerLongestGameTime': playerLongestGameTime,
                                      'shotsPerMinute': shotsPerMinute,
                                      'inputsPerMinute': inputsPerMinute,
                                      'movementsPerMinute': movementsPerMinute,

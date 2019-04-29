@@ -32,7 +32,10 @@ class MutationParser(object):
                 for row in islice(reader, mutationStart, mutationEnd):
                     mutation_data.append(row)
 
-            Mutations.append(Mutation(mutationName, mutation_data, mutationOrder))
+            mutation = Mutation(mutationName, mutation_data, mutationOrder)
+
+            mutation_data.append([MutationParser.findLastTimeStampOfMutation(mutation), "LastRow"])
+            Mutations.append(mutation)
         return Mutations
 
     def findMutationRanges(logfile):
@@ -122,6 +125,10 @@ class MutationParser(object):
                 last = timestamp
         return last
 
+    def findLastTimeStampOfMutation(Mutation):
+        timestamp, event=Mutation.data[len(Mutation.data)-1]
+        return timestamp
+
     def calculateInputKeyIsHeldDownTime(Mutation, key, min_time_held_ms):
         """ Returns a list of timestamps when "min_time_held_ms" long hold have been initiated. """
         key_down = "KeyDown|" + key
@@ -151,6 +158,15 @@ class MutationParser(object):
                 timestamps.append(float(timestamp))
         return timestamps
 
+    def findOccurencesThatStartWithAny(Mutation, occurenceList):
+        timestamps = []
+        for line in Mutation.data:
+            timestamp, event = line
+            for occurence in occurenceList:
+                if event.startswith(occurence):
+                    timestamps.append(float(timestamp))
+        return timestamps
+
     def getInputsPerMinute(Mutation, start = None, end = None):
         amnt = 0
         firstOccurence = 0
@@ -175,7 +191,7 @@ class MutationParser(object):
             return None
         return round(amnt / ((lastOccurence - firstOccurence)/60), 3)
 
-    def calculateDiffs (Mutation, occurence):
+    def calculateDiffs(Mutation, occurence):
         diffs = []
         lastTime = 0
         times = MutationParser.findOccurencesThatStartWith(
@@ -186,6 +202,21 @@ class MutationParser(object):
             else:
                 diffs.append(time)
             lastTime = time
+        if (len(diffs) > 0):
+            longest = max(diffs)
+            shortest = min(diffs)
+            average = statistics.median(diffs)
+        else:
+            return None, None, None
+        return round(longest, 3), round(shortest, 3), round(average, 3)
+
+    def calculateRanges(Mutation, startPointList, endPointList):
+        diffs = []
+        starts = MutationParser.findOccurencesThatStartWithAny(
+            Mutation, startPointList)
+        ends = MutationParser.findOccurencesThatStartWithAny(Mutation, endPointList)
+        for c, time in enumerate(starts):
+            diffs.append(ends[c] - time)
         if (len(diffs) > 0):
             longest = max(diffs)
             shortest = min(diffs)
