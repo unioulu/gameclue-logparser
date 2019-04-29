@@ -58,6 +58,9 @@ class CSVWriter(object):
                   'playerShortestTimeAlive',
                   'playerAverageTimeAlive',
                   'playerLongestTimeAlive',
+                  'playerShortestGameTime',
+                  'playerAverageGameTime',
+                  'playerLongestGameTime',
                   'shotsPerMinute',
                   'inputsPerMinute',
                   'movementsPerMinute',
@@ -112,6 +115,8 @@ class CSVWriter(object):
                         mutation, "PickUpSpawned|Coin_Negative(Clone)")
 
                     playerLongestTimeAlive, playerShortestTimeAlive, playerAverageTimeAlive = MutationParser.calculateDiffs(mutation, "PlayerDied")
+
+                    playerLongestGameTime, playerShortestGameTime, playerAverageGameTime = MutationParser.calculateRanges(mutation, ["GameStarted"], ["PlayerDied", "LastRow"])
 
                     shotsPerMinute = MutationParser.getInputsPerMinute(
                         mutation, "KeyDown|Space", "KeyDown|Space")
@@ -168,6 +173,9 @@ class CSVWriter(object):
                                      'playerShortestTimeAlive': playerShortestTimeAlive,
                                      'playerLongestTimeAlive': playerLongestTimeAlive,
                                      'playerAverageTimeAlive': playerAverageTimeAlive,
+                                     'playerShortestGameTime': playerShortestGameTime,
+                                     'playerAverageGameTime': playerAverageGameTime,
+                                     'playerLongestGameTime': playerLongestGameTime,
                                      'shotsPerMinute': shotsPerMinute,
                                      'inputsPerMinute': inputsPerMinute,
                                      'movementsPerMinute': movementsPerMinute,
