@@ -38,6 +38,7 @@ class CSVWriter(object):
                   'hasCues',
                   'mutationPlayedInOrder',
                   'mutationTime',
+                  'totalMutationPlaytimes',
                   'playerDeaths',
                   'playerRecievedAsteroidDmg',
                   'playerRecievedDebrisDmg',
@@ -81,6 +82,8 @@ class CSVWriter(object):
                 playerTimeAlive = 0
                 for mutation in logfile.mutations:
 
+                    totalMutationPlaytimes = Counter.countStartsWith(
+                        mutation, "GameStarted")
                     playerDeaths = Counter.countKeys(
                         mutation, "GameEnded|PlayerDied")
 
@@ -153,6 +156,7 @@ class CSVWriter(object):
                                      'hasCues': logfile.has_cues,
                                      'mutationPlayedInOrder': mutation.played_in_order,
                                      'mutationTime': mutation.data[-1][0],
+                                     'totalMutationPlaytimes': totalMutationPlaytimes,
                                      'playerDeaths': playerDeaths,
                                      'playerRecievedAsteroidDmg': playerRecievedAsteroidDmg,
                                      'playerRecievedDebrisDmg': playerRecievedDebrisDmg,
