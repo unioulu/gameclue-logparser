@@ -1,6 +1,6 @@
 # gameclue-log-parser
 
-Parser that processes [unioulu/gameclue] game logs.
+Parser that processes [unioulu/gameclue-spacege] game logs to produce research relevant data.
 
 ## Purpose
 
