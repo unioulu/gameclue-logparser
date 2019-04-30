@@ -1,10 +1,10 @@
 # gameclue-log-parser
 
-Parser that processes [unioulu/gameclue-spacegame] game logs to produce research relevant data.
+Parser that processes [unioulu/gamecluespacegame] game logs to produce research relevant data.
 
 ## Purpose
 
-This program is used to process game logs produced by [unioulu/gameclue-spacegame]. In practice, the program makes sense of the
+This program is used to process game logs produced by [unioulu/gamecluespacegame]. In practice, the program makes sense of the
 log files, calculates meaningful research relevant values and uses those values to produce a MutationReport.csv file.
 
 # Prerequisites
@@ -21,7 +21,7 @@ $ ./parser/parse.py logs/ --output output/
 ## Caveats
 
 - *Note*: Given logfiles path must be an existing folder and the output path *must* include a trailing slash (`/`).
-- *Note*: Given logfiles path must contain logfiles produced by the [unioulu/gameclue-spacegame] *only* _without_the_fps_logs_. Parsing fps logs are currently not supported.
+- *Note*: Given logfiles path must contain logfiles produced by the [unioulu/gamecluespacegame] *only* _without_the_fps_logs_. Parsing fps logs are currently not supported.
 
 # Arguments
 
@@ -41,4 +41,4 @@ optional arguments:
   -o O        Specify the output folder path.
 ```
 
-[unioulu/gameclue-spacegame]: (https://github.com/unioulu/gameclue-spacegame)
+[unioulu/gamecluespacegame]: (https://github.com/unioulu/gameclue-spacegame)
